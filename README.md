@@ -1,2 +1,5 @@
-# bulnv_microservices
-bulnv microservices repository
+ # Homework-13
+ - Запустили контейнер
+ - Сделали коммит образа контейнера
+ - Познакомились с основными коммандами
+ 
