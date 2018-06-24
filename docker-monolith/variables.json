@@ -1,0 +1,11 @@
+{
+  "project_id": "docker-202808",
+  "image_name": "docker-base",
+  "machine_type": "f1-micro",
+  "source_image_family": "ubuntu-1604-lts",
+  "image_description": "baked docker image",
+  "disk_type": "pd-standard",
+  "disk_size": "10",
+  "network": "default",
+  "tags": "docker-machine"
+}

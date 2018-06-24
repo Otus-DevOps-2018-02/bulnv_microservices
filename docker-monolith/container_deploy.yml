@@ -1,0 +1,13 @@
+---
+- name: Deploy docker
+  become: true
+  hosts: all
+  tags: deploy-docker
+  tasks:
+  - name: Install and start container
+    docker_container:
+      name: myredditapp
+      image: bulnv/otus-reddit:1.0
+      state: started
+      pull: yes
+      expose: 9292
