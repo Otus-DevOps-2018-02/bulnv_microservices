@@ -10,7 +10,7 @@ before_script:
 stages:
   - build
   - test
-  - deploy
+  - кумшуц
 
 build_job:
   stage: build
@@ -22,14 +22,17 @@ test_unit_job:
  services:
  - mongo:latest
  script:
- - ruby simpletest.rb 
+ - ruby simpletest.rb
 
 test_integration_job:
   stage: test
   script:
     - echo 'Testing 2'
 
-deploy_job:
-  stage: deploy
-  script:
-    - echo 'Deploy'
+deploy_dev_job:
+ stage: review
+ script:
+ - echo 'Deploy'
+ environment:
+ name: dev
+ url: http://dev.example.com
