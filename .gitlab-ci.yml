@@ -41,6 +41,7 @@ deploy_dev_job:
 
 branch review:
   stage: review
+  image: docker:latest
   script:
     - echo "Deploy to $CI_ENVIRONMENT_SLUG"
     - docker run alpine:latest -d
