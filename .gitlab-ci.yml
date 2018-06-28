@@ -14,9 +14,21 @@ stages:
   - production
 
 build_job:
+  tags:
+    - docker
+  image: docker:latest
   stage: build
+  variables:
+    DOCKER_OPTS: "--insecure-registry=${GITLAB_REGISTRY}"
+
+  services:
+    - name: lordgaav/dind-options:latest
+      alias: docker
   script:
     - echo 'Building'
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN ${GITLAB_REGISTRY}
+    - docker build -t ${GITLAB_REGISTRY}/${CI_PROJECT_PATH}/reddit:${CI_COMMIT_REF_NAME} .
+    - docker push ${GITLAB_REGISTRY}/${CI_PROJECT_PATH}/reddit:${CI_COMMIT_REF_NAME}
 
 test_unit_job:
  stage: test
@@ -32,6 +44,8 @@ test_integration_job:
     - echo 'Testing 2'
 
 deploy_dev_job:
+  tags:
+    - deploy-server
   stage: review
   script:
    - echo 'Deploy'
@@ -44,10 +58,28 @@ branch review:
   image: bodymindarts/docker-machine-setup:latest
   script:
     - echo "Deploy to $CI_ENVIRONMENT_SLUG"
-    - docker-machine status
+    - docker-machine status DM-${CI_COMMIT_REF_NAME} > /dev/null || docker-machine create --driver google --google-disk-size 10 --google-machine-image ${GCP_IMAGE}  --google-machine-type n1-standard-1 --google-zone ${GCP_ZONE} --google-project ${GCP_PROJECT} --engine-insecure-registry ${GITLAB_REGISTRY} reddit-deploy-${CI_COMMIT_REF_NAME}
+    - eval $(docker-machine env DM-${CI_COMMIT_REF_NAME})
   environment:
     name: branch/$CI_COMMIT_REF_NAME
     url: http://$CI_ENVIRONMENT_SLUG.example.com
+    on_stop: srv_rm
+  only:
+    - branches
+  except:
+    - master
+
+  srv_rm:
+  tags:
+    - deploy-server
+  stage: review
+  script:
+    - docker-machine rm -f reddit-deploy-${CI_COMMIT_REF_NAME}
+  when: manual
+  environment:
+    name: branch/$CI_COMMIT_REF_NAME
+    url: http://$CI_ENVIRONMENT_SLUG.example.com
+    action: stop
   only:
     - branches
   except:
