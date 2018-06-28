@@ -69,7 +69,7 @@ branch review:
   except:
     - master
 
-  srv_rm:
+srv_rm:
   tags:
     - deploy-server
   stage: review
