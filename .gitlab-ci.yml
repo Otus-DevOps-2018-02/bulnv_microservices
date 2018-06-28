@@ -18,12 +18,6 @@ build_job:
     - docker
   image: docker:latest
   stage: build
-  variables:
-    DOCKER_OPTS: "--insecure-registry=${GITLAB_REGISTRY}"
-
-  services:
-    - name: lordgaav/dind-options:latest
-      alias: docker
   script:
     - echo 'Building'
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN ${GITLAB_REGISTRY}
