@@ -16,12 +16,12 @@ stages:
 build_job:
   tags:
     - docker
-  image: docker:latest
+  image: gitlab/dind
   variables:
     DOCKER_OPTS: "--insecure-registry=${GITLAB_REGISTRY}"
   stage: build
   services:
-    - name: lordgaav/dind-options:latest
+    - docker:dind
   script:
     - echo 'Building'
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" "$CI_REGISTRY" --password-stdin
