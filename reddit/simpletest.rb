@@ -1,4 +1,4 @@
-require_relative './app'
+require_relative './app.rb'
 require 'test/unit'
 require 'rack/test'
 
