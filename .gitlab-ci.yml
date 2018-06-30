@@ -12,7 +12,7 @@ stages:
   - review
   - stage
   - production
- 
+
 build_job:
   tags:
     - docker
@@ -24,7 +24,7 @@ build_job:
     - docker:dind
   script:
     - echo 'Building'
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN ${GITLAB_REGISTRY}
+    - sudo docker login -u gitlab-ci-token -p $CI_JOB_TOKEN ${GITLAB_REGISTRY}
     - docker build -t ${GITLAB_REGISTRY}/${CI_PROJECT_PATH}/reddit:${CI_COMMIT_REF_NAME} .
     - docker push ${GITLAB_REGISTRY}/${CI_PROJECT_PATH}/reddit:${CI_COMMIT_REF_NAME}
 
