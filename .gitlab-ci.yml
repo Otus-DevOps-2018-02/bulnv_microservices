@@ -25,7 +25,7 @@ build_job:
   script:
     - echo 'Building'
     - echo %GITLAB_REGISTRY%
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN ${GITLAB_REGISTRY}
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN http://127.0.0.1
     - docker build -t ${GITLAB_REGISTRY}/${CI_PROJECT_PATH}/reddit:${CI_COMMIT_REF_NAME} .
     - docker push ${GITLAB_REGISTRY}/${CI_PROJECT_PATH}/reddit:${CI_COMMIT_REF_NAME}
 
