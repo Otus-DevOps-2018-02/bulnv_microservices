@@ -18,7 +18,7 @@ build_job:
     - docker
   image: docker:latest
   variables:
-    DOCKER_OPTS: "--insecure-registry=${GITLAB_REGISTRY}"
+    DOCKER_OPTS: "--insecure-registry=$CI_REGISTRY"
   stage: build
   services:
     - docker:dind
