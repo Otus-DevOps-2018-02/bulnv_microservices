@@ -27,8 +27,8 @@ build_job:
     - echo "$CI_REGISTRY"
     - echo $CI_PROJECT_PATH
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t reddit:$CI_COMMIT_REF_NAME .
-    - docker push $CI_REGISTRY/reddit:$CI_COMMIT_REF_NAME
+    - docker build -t CI_REGISTRY/$CI_PROJECT_PATH:$CI_COMMIT_REF_NAME .
+    - docker push CI_REGISTRY/$CI_PROJECT_PATH:latest
 
 test_unit_job:
  stage: test
