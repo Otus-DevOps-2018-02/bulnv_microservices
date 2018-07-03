@@ -1,0 +1,74 @@
+version: '3.3'
+services:
+  post_db:
+    image: ${REDDIT_MONGO_VER}
+    volumes:
+      - post_db:/data/db
+    networks:
+      - reddit-back
+  ui:
+    image: ${USER_NAME}/ui:${REDDIT_VER}
+    ports:
+      - ${REDDIT_PORT}:${REDDIT_PORT}/tcp
+    networks:
+      - reddit-front
+  post:
+    tty: true
+    image: ${USER_NAME}/post:${REDDIT_VER}
+    networks:
+      - reddit-front
+      - reddit-back
+  comment:
+    tty: true
+    image: ${USER_NAME}/comment:${REDDIT_VER}
+    networks:
+      - reddit-back
+      - reddit-front
+  node-exporter:
+    image: prom/node-exporter:v0.15.2
+    user: root
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+    networks:
+      - reddit-back
+  mongodb-exporter:
+    image: ${USER_NAME}/mongodb_exporter
+    environment:
+      - MONGODB_URL=mongodb://post_db:27017
+    networks:
+      - reddit-back
+  blackbox:
+    image: prom/blackbox-exporter:v0.12.0
+    ports:
+      - 9115:9115/tcp
+    networks:
+      - reddit-front
+  prometheus:
+    image: ${USER_NAME}/prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention=1d'
+    networks:
+      - reddit-back
+      - reddit-front
+
+
+volumes:
+  post_db:
+  prometheus_data:
+  pwd:
+
+networks:
+  reddit-back:
+  reddit-front:
