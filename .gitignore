@@ -18,3 +18,4 @@ vault.key
 
 #docker
 compose_vars.env
+.env
