@@ -1,0 +1,35 @@
+version: '3.3'
+services:
+  post_db:
+    image: ${REDDIT_MONGO_VER}
+    volumes:
+      - post_db:/data/db
+    networks:
+      - reddit-back
+  ui:
+    image: ${USER_NAME}/ui:${REDDIT_VER}
+    ports:
+      - ${REDDIT_PORT}:${REDDIT_PORT}/tcp
+    networks:
+      - reddit-front
+  post:
+    tty: true
+    image: ${USER_NAME}/post:${REDDIT_VER}
+    networks:
+      - reddit-front
+      - reddit-back
+  comment:
+    tty: true
+    image: ${USER_NAME}/comment:${REDDIT_VER}
+    networks:
+      - reddit-back
+      - reddit-front
+
+volumes:
+  post_db:
+  prometheus_data:
+  pwd:
+
+networks:
+  reddit-back:
+  reddit-front:

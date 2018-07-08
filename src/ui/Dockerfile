@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.7
 ENV APP_HOME /app
 
 RUN apk --no-cache add --virtual \
